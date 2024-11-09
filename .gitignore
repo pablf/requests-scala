@@ -6,6 +6,9 @@ target/
 .project
 .cache
 .sbtserver
+.metals
+.bsp
+.vscode
 project/.sbtserver
 tags
 nohup.out

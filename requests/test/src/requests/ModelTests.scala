@@ -2,16 +2,24 @@ package requests
 
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.nio.file.{FileSystems, Path}
+import java.nio.file.{Files, Path}
 
 import utest._
+import java.nio.file.StandardCopyOption
+import java.io.FileInputStream
 
 object ModelTests extends TestSuite{
+
   val tests = Tests {
     test("multipart file uploads should contain application/octet-stream content type") {
-      val path = getClass.getResource("/license.zip").getPath
-      val file = new File(path)
-      val nioPath = FileSystems.getDefault.getPath(path)
+      val file = File.createTempFile("multipart_test2", null)
+      file.deleteOnExit()
+      val license = FileUtils.getFile("license.zip")
+      if (license == null) {
+        throw new Exception("license.zip not found")
+      }
+      Files.copy(license, file.toPath(), StandardCopyOption.REPLACE_EXISTING)
+      val path = file.toPath()
       val fileKey = "fileKey"
       val fileName = "fileName"
       
@@ -26,7 +34,7 @@ object ModelTests extends TestSuite{
       val nioPathMultipart = MultiPart(
         MultiItem(
           fileKey,
-          nioPath,
+          path,
           fileName
         )
       )

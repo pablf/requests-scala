@@ -41,6 +41,7 @@ object Scala2RequestTests extends HttpbinTestSuite {
 
         assert(read(res1).obj("form") == Obj("foo" -> "baz", "hello" -> "world"))
       }
+
     }
   }
 }

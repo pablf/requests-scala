@@ -210,7 +210,7 @@ case class Response(url: String,
     .iterator
     .flatten
     .flatMap(java.net.HttpCookie.parse(_).asScala)
-    .map(x => x.getName -> x)
+    .map(x => x.getName() -> x)
     .toMap
 
   def contentType = headers.get("content-type").flatMap(_.headOption)
