@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        platform: ['jvm', 'native']
         java: ['11', '17']
     steps:
       - uses: actions/checkout@v3
@@ -22,8 +23,16 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
+      - name: Install libcurl with legacy OpenSSL
+        if: matrix.platform == 'native'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl1.0-dev
+          sudo apt-get install -y libcurl4-openssl-dev
+          sudo apt-get install -y libz-dev
+          sudo apt-get install -y libmicrohttpd-dev
       - name: Run tests
-        run: ./mill -i __.publishArtifacts + __.test
+        run: ./mill -i __.publishArtifacts + __.${{ matrix.platform }}.__.test
 
   check-binary-compatibility:
     runs-on: ubuntu-latest
