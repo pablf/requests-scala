@@ -63,7 +63,9 @@ jobs:
 
   publish-sonatype:
     if: github.repository == 'com-lihaoyi/requests-scala' && contains(github.ref, 'refs/tags/')
-    needs: test-jvm && test-native
+    needs: 
+      - test-jvm
+      - test-native
     runs-on: ubuntu-latest
     env:
       SONATYPE_PGP_PRIVATE_KEY: ${{ secrets.SONATYPE_PGP_PRIVATE_KEY }}
