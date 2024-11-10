@@ -37,7 +37,6 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
       - name: Install libcurl with legacy OpenSSL
-        if: matrix.platform == 'native'
         run: |
           sudo apt-get update
           sudo apt-get install -y libssl1.1-dev
