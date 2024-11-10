@@ -11,16 +11,25 @@ on:
       - master
 
 jobs:
-  test:
+  test-jvm:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: ['jvm', 'native']
         java: ['11', '17']
-        include:
-          - platform: 'jvm'
-            runs-on: ubuntu-latest
-          - platform: 'native'
-            runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - name: Run tests
+        run: ./mill -i __.jvm.__.publishArtifacts + __.jvm.__.test
+
+  test-native:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        java: ['11', '17']
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -36,7 +45,8 @@ jobs:
           sudo apt-get install -y libz-dev
           sudo apt-get install -y libmicrohttpd-dev
       - name: Run tests
-        run: ./mill -i __.${{ matrix.platform }}.__.publishArtifacts + __.${{ matrix.platform }}.__.test
+        run: ./mill -i __.native.__.publishArtifacts + __.native.__.test
+
 
   check-binary-compatibility:
     runs-on: ubuntu-latest
