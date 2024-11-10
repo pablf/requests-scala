@@ -39,7 +39,7 @@ jobs:
       - name: Install libcurl with legacy OpenSSL
         run: |
           sudo apt-get update
-          sudo apt-get install -y libssl1.1-dev
+          sudo apt-get install -y libssl-dev
           sudo apt-get install -y libcurl4-openssl-dev
           sudo apt-get install -y libz-dev
           sudo apt-get install -y libmicrohttpd-dev
