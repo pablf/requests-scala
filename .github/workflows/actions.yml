@@ -12,11 +12,15 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         platform: ['jvm', 'native']
         java: ['11', '17']
+        include:
+          - platform: 'jvm'
+            runs-on: ubuntu-latest
+          - platform: 'native'
+            runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -27,12 +31,12 @@ jobs:
         if: matrix.platform == 'native'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libssl1.0-dev
+          sudo apt-get install -y libssl1.1-dev
           sudo apt-get install -y libcurl4-openssl-dev
           sudo apt-get install -y libz-dev
           sudo apt-get install -y libmicrohttpd-dev
       - name: Run tests
-        run: ./mill -i __.publishArtifacts + __.${{ matrix.platform }}.__.test
+        run: ./mill -i __.${{ matrix.platform }}.__.publishArtifacts + __.${{ matrix.platform }}.__.test
 
   check-binary-compatibility:
     runs-on: ubuntu-latest
